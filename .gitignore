@@ -10,3 +10,8 @@ wheels/
 .venv
 .env
 uv.lock
+
+# Local vector store and PDF extraction artifacts
+.chroma/
+*_extracted_images/
+extracted_data/
