@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import mimetypes
+import uuid
 from pathlib import Path
 
 from langchain_core.documents import Document
@@ -19,6 +20,10 @@ from multimodal_rag.links import image_file_link, pdf_doc_link
 def _page_num(el: Element) -> int | None:
     n = el.metadata.page_number
     return int(n) if n is not None else None
+
+
+def _new_chunk_id() -> str:
+    return str(uuid.uuid4())
 
 
 def _caption_image(image_path: Path, chat: ChatGoogleGenerativeAI) -> str:
@@ -54,8 +59,8 @@ def pdf_elements_to_documents(
     caption_images: bool = True,
     chunk_size: int = 1200,
     chunk_overlap: int = 200,
-) -> list[Document]:
-    """Partition a PDF and return LangChain `Document` chunks with link metadata."""
+) -> tuple[list[Document], list[str]]:
+    """Partition a PDF; return LangChain documents with chunk graph metadata and parallel Chroma ids."""
     pdf_path = pdf_path.expanduser().resolve()
     image_output_dir = image_output_dir.expanduser().resolve()
     image_output_dir.mkdir(parents=True, exist_ok=True)
@@ -75,8 +80,9 @@ def pdf_elements_to_documents(
     )
 
     docs: list[Document] = []
+    ids: list[str] = []
 
-    for el in elements:
+    for element_index, el in enumerate(elements):
         page = _page_num(el)
         doc_link = pdf_doc_link(pdf_path, page)
 
@@ -84,7 +90,12 @@ def pdf_elements_to_documents(
             body = (el.metadata.text_as_html or el.text or "").strip()
             if not body:
                 continue
+            cid = _new_chunk_id()
             meta = {
+                "chunk_id": cid,
+                "element_index": element_index,
+                "split_index": 0,
+                "split_count": 1,
                 "source": str(pdf_path),
                 "page": page or -1,
                 "content_type": "table",
@@ -97,6 +108,7 @@ def pdf_elements_to_documents(
                 if il:
                     meta["image_link"] = il
             docs.append(Document(page_content=body, metadata=meta))
+            ids.append(cid)
             continue
 
         if isinstance(el, Image):
@@ -114,7 +126,12 @@ def pdf_elements_to_documents(
                     f"page {page or '?'}"
                 )
             embed_text = f"[IMAGE] {description}"
+            cid = _new_chunk_id()
             meta = {
+                "chunk_id": cid,
+                "element_index": element_index,
+                "split_index": 0,
+                "split_count": 1,
                 "source": str(pdf_path),
                 "page": page or -1,
                 "content_type": "image",
@@ -125,17 +142,25 @@ def pdf_elements_to_documents(
             if il:
                 meta["image_link"] = il
             docs.append(Document(page_content=embed_text, metadata=meta))
+            ids.append(cid)
             continue
 
         text = (el.text or "").strip()
         if not text:
             continue
 
-        for chunk in splitter.split_text(text):
+        split_chunks = splitter.split_text(text)
+        split_count = len(split_chunks)
+        for split_index, chunk in enumerate(split_chunks):
+            cid = _new_chunk_id()
             docs.append(
                 Document(
                     page_content=chunk,
                     metadata={
+                        "chunk_id": cid,
+                        "element_index": element_index,
+                        "split_index": split_index,
+                        "split_count": split_count,
                         "source": str(pdf_path),
                         "page": page or -1,
                         "content_type": "text",
@@ -143,5 +168,6 @@ def pdf_elements_to_documents(
                     },
                 )
             )
+            ids.append(cid)
 
-    return docs
+    return docs, ids

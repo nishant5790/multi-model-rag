@@ -141,6 +141,14 @@ Pure helpers for stable URIs (no classes):
 |----------|-------------|
 | `get_vectorstore(persist_directory, collection_name=..., embeddings=...)` | Creates or opens a **persistent** `langchain_chroma.Chroma` instance; creates the directory if needed |
 
+### `multimodal_rag/graph_store.py`
+
+| Name | Type | Description |
+|------|------|-------------|
+| `ChunkGraph` | class | Loads/saves `chunk_graph.json`; merges undirected neighbor edges with `same_element_next` / `adjacent_element` labels |
+| `build_local_graph_from_ordered_docs` | function | Builds a graph from ingest-ordered documents using `chunk_id` and `element_index` |
+| `expand_chunk_ids` | function | BFS neighbor expansion for query-time context widening |
+
 ### `multimodal_rag/ingestion.py`
 
 Ingestion pipeline from PDF to `langchain_core.documents.Document` list.
@@ -149,7 +157,7 @@ Ingestion pipeline from PDF to `langchain_core.documents.Document` list.
 |------|------|-------------|
 | `_page_num` | function | Reads `element.metadata.page_number` |
 | `_caption_image` | function | Sends image + prompt to Gemini chat (vision); returns caption string |
-| `pdf_elements_to_documents` | function | Runs `partition_pdf`, maps `Table` / `Image` / text elements to documents with metadata; optional captioning |
+| `pdf_elements_to_documents` | function | Runs `partition_pdf`, maps `Table` / `Image` / text elements to documents with `chunk_id`, `element_index`, split metadata; returns `(documents, ids)` for Chroma |
 
 **`pdf_elements_to_documents` parameters (important):**
 
@@ -170,9 +178,9 @@ Ingestion pipeline from PDF to `langchain_core.documents.Document` list.
 
 | Method | Description |
 |--------|-------------|
-| `__init__(persist_directory, collection_name="multimodal_rag")` | Builds embeddings, chat, Chroma store, retriever (`k=6`), and `RAG_PROMPT \| chat \| StrOutputParser` |
-| `ingest_pdf(pdf_path, image_output_dir=None, caption_images=True)` | Runs `pdf_elements_to_documents`, then `add_documents`; returns chunk count |
-| `query(question)` | Retrieves top documents, formats context, runs QA; returns `{"answer": str, "sources": list[dict]}` |
+| `__init__(persist_directory, collection_name="multimodal_rag", retrieve_k=6, graph_expand_k=8, max_graph_hops=1, use_graph_expand=True)` | Builds embeddings, chat, Chroma, retriever, chunk graph from `chunk_graph.json`, and QA chain |
+| `ingest_pdf(pdf_path, image_output_dir=None, caption_images=True)` | Runs `pdf_elements_to_documents`, merges adjacency into `chunk_graph.json`, `add_documents(..., ids=...)`; returns chunk count |
+| `query(question)` | Top-k similarity, optional graph neighbor expansion via Chroma `get`, formats context, runs QA; sources include `chunk_id` and `graph_expanded` |
 
 ### `multimodal_rag/cli.py`
 
