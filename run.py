@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import uvicorn
 from agent.config import AGENT_HOST, AGENT_PORT
 

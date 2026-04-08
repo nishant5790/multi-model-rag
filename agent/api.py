@@ -21,6 +21,8 @@ jobs: dict[str, dict] = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global report_store, compiled_graph
+    from dotenv import load_dotenv
+    load_dotenv()
     report_store = ReportStore(chroma_dir=CHROMA_DIR, reports_dir=REPORTS_DIR)
     compiled_graph = build_graph(report_store)
     yield
@@ -71,25 +73,28 @@ def _run_graph_sync(job_id: str, query: str) -> None:
 
 @app.post("/query", response_model=QueryResponse)
 async def submit_query(req: QueryRequest, background_tasks: BackgroundTasks):
+    from agent.config import SIMILARITY_THRESHOLD, TTL_DAYS
+
     job_id = str(uuid.uuid4())
 
-    initial_state: AgentState = {
-        "query": req.query,
-        "job_id": job_id,
-        "route": "",
-        "similarity_score": 0.0,
-        "matched_query": None,
-        "research_results": None,
-        "rag_results": None,
-        "report": None,
-        "status": "pending",
-        "error": None,
-    }
+    match = report_store.find_similar(
+        req.query, threshold=SIMILARITY_THRESHOLD, ttl_days=TTL_DAYS
+    )
 
-    result = compiled_graph.invoke(initial_state)
-    route = result.get("route", "new")
-
-    if route == "old":
+    if match is not None:
+        initial_state: AgentState = {
+            "query": req.query,
+            "job_id": job_id,
+            "route": "old",
+            "similarity_score": 1.0,
+            "matched_query": match[0],
+            "research_results": None,
+            "rag_results": None,
+            "report": None,
+            "status": "pending",
+            "error": None,
+        }
+        result = compiled_graph.invoke(initial_state)
         return QueryResponse(
             job_id=job_id,
             status="complete",
