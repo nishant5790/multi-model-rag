@@ -2,8 +2,8 @@
 vector_store.py
 ───────────────
 Builds a LangChain MultiVectorRetriever backed by:
-  • Chroma           — stores *summaries/text* as dense vectors
-  • InMemoryByteStore — stores *full raw content* keyed by doc_id
+  • Chroma          — stores *summaries/text* as dense vectors
+  • LocalFileByteStore — stores *full raw content* keyed by doc_id (persisted to disk)
 
 Architecture
 ────────────
@@ -11,7 +11,7 @@ Architecture
 │                MultiVectorRetriever                     │
 │                                                         │
 │  ┌──────────────────┐      ┌────────────────────────┐   │
-│  │   Chroma (index) │      │  InMemoryByteStore     │   │
+│  │   Chroma (index) │      │  LocalFileByteStore    │   │
 │  │                  │      │  (raw content store)   │   │
 │  │ text summary  ──────────► TextElement (json)     │   │
 │  │ table summary ──────────► TableElement (json)    │   │
@@ -33,7 +33,7 @@ from pathlib import Path
 from typing import List, Sequence
 
 from langchain_classic.retrievers.multi_vector import MultiVectorRetriever
-from langchain_core.stores import InMemoryByteStore
+from langchain_core.stores import BaseStore
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -46,6 +46,44 @@ console = Console()
 
 # Key used in Chroma metadata to link summaries → raw docs
 DOC_ID_KEY = "doc_id"
+
+
+# ── Persistent file-backed byte store ─────────────────────────────────────────
+
+class LocalFileByteStore(BaseStore[str, bytes]):
+    """
+    Drop-in replacement for InMemoryByteStore that persists each
+    key-value pair as a file on disk.  Keys become filenames inside
+    *root_path*; values are stored as raw bytes.
+    """
+
+    def __init__(self, root_path: str | Path) -> None:
+        self._root = Path(root_path)
+        self._root.mkdir(parents=True, exist_ok=True)
+
+    def _key_path(self, key: str) -> Path:
+        return self._root / key
+
+    def mget(self, keys: Sequence[str]) -> list[bytes | None]:
+        results: list[bytes | None] = []
+        for k in keys:
+            p = self._key_path(k)
+            results.append(p.read_bytes() if p.exists() else None)
+        return results
+
+    def mset(self, key_value_pairs: Sequence[tuple[str, bytes]]) -> None:
+        for key, value in key_value_pairs:
+            self._key_path(key).write_bytes(value)
+
+    def mdelete(self, keys: Sequence[str]) -> None:
+        for k in keys:
+            p = self._key_path(k)
+            p.unlink(missing_ok=True)
+
+    def yield_keys(self, *, prefix: str | None = None):
+        for p in self._root.iterdir():
+            if p.is_file() and (prefix is None or p.name.startswith(prefix)):
+                yield p.name
 
 
 # ── Embedding Model ────────────────────────────────────────────────────────────
@@ -140,7 +178,7 @@ class MultiModalVectorStore:
         self.persist_directory = persist_directory or config.VECTOR_STORE_PATH
         self.collection_name   = collection_name
         self._embeddings       = get_embeddings()
-        self._byte_store       = InMemoryByteStore()
+        self._byte_store       = LocalFileByteStore(config.DOCSTORE_PATH)
         self._vectorstore: Chroma | None  = None
         self._retriever:   MultiVectorRetriever | None = None
 

@@ -95,7 +95,7 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
         "summary": summary,
         "sources_by_platform": sources_by_platform,
     }
-    report_store.store_query(query, job_id, report)
+    report_store.store_query(query, job_id)
 
     text_docs = _collect_text_content(sources_by_platform)
     if text_docs:

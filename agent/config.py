@@ -9,7 +9,6 @@ RESEARCH_LIMIT = 5
 
 CHROMA_DIR = Path(os.getenv("CHROMA_DIR", ".chroma"))
 QUERY_INDEX_COLLECTION = "query_index"
-REPORTS_DIR = Path(os.getenv("REPORTS_DIR", "reports"))
 
 AGENT_HOST = "0.0.0.0"
 AGENT_PORT = int(os.getenv("PORT", "8001"))

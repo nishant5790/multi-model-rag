@@ -7,11 +7,10 @@ from agent.services.report_store import ReportStore
 
 def query_matcher(state: AgentState, *, report_store: ReportStore) -> dict:
     query = state["query"]
-    result = report_store.find_similar(
+    matched_query = report_store.find_similar(
         query, threshold=SIMILARITY_THRESHOLD, ttl_days=TTL_DAYS
     )
-    if result is not None:
-        matched_query, _ = result
+    if matched_query is not None:
         return {
             "route": "old",
             "similarity_score": 1.0,

@@ -1,0 +1,917 @@
+{
+  "test_run": {
+    "timestamp": "2026-04-02T09:32:53.091489+00:00",
+    "total_queries": 10,
+    "successful": 10,
+    "failed": 0,
+    "avg_latency_seconds": 4.95,
+    "source_types_seen": [
+      "image",
+      "table",
+      "text"
+    ],
+    "image_sources_found": 3
+  },
+  "results": [
+    {
+      "id": 1,
+      "query": "What are the key financial highlights from the annual report?",
+      "category": "text-retrieval",
+      "target_pdf": "Annual-Report-Analysis.pdf",
+      "answer": "The key financial highlights from the annual report include:\n*   **Assets under management (AUM)** grew from 3,817 in FY24 to 4,505 in FY25, an 18% increase. This healthy growth highlights the widespread adoption and popularity of the financing option among clients.\n*   **Total Revenue** increased from 486 in FY24 to 800 in FY25, showing a strong growth of 65% across segments.\n*   **PAT (Profit After Tax)** saw a significant increase of 148%, rising from 56 in FY24 to 139 in FY25.\n\nThis information is presented in a table on page 9 [Source 4], image_path=/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/table-9-8.jpg. Other sections also mention \"Key Financials (Consolidated)\" [Source 2] and \"Financials (Consolidated)\" [Source 3].",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 3,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=3",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Key Operating Highlights"
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Key Financials (Consolidated)"
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 16,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=16",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Financials (Consolidated)"
+        },
+        {
+          "index": 4,
+          "content_type": "table",
+          "page": 9,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=9",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/table-9-8.jpg",
+          "image_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/table-9-8.jpg",
+          "snippet": "Particulars FY24 FY25 Change (%) Comments AUM growth remained healthy, highlighting the widespread adoption Assets under management 3,817 4,505 18% and popularity of this financing option among clients. Total Revenue 486 800 65% Strong growth seen across segments PAT 56 139 148%"
+        },
+        {
+          "index": 5,
+          "content_type": "text",
+          "page": 9,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=9",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Key Subsidiary Highlights"
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Key Highlights"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "table",
+        "text",
+        "text"
+      ],
+      "source_pages": [
+        3,
+        2,
+        16,
+        9,
+        9,
+        2
+      ],
+      "has_image_sources": true,
+      "num_sources": 6,
+      "latency_seconds": 5.36,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 2,
+      "query": "What are the main risks and challenges mentioned in the report?",
+      "category": "text-retrieval",
+      "target_pdf": "Annual-Report-Analysis.pdf",
+      "answer": "The main risks and challenges mentioned in the report include:\n*   Risks & Mitigation [Source 1]\n*   Asset Quality Challenges in certain segments [Source 2]. Specifically, BAF has experienced stress build-up in the rural B2C segment and the winding down of its captive 2W/3W financing business. Continued stress in certain segments, leading to higher delinquencies, and the impact on asset quality due to regulatory changes, remain risks for the company [Source 3].",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 13,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=13",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Risks & Mitigation"
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 13,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=13",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Asset Quality Challenges in certain segments"
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 13,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=13",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "While asset quality has remained healthy across most segments, BAF has seen some stress build-up in the rural B2C segment and the winding down of captive 2W/3W financing business. Continued stress in certain segments, resulting in higher delinquencies alongside impact on asset quality owing to regulatory changes, continues to remain a risk for the company."
+        },
+        {
+          "index": 4,
+          "content_type": "text",
+          "page": 8,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=8",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "5. Limitations and Future Work"
+        },
+        {
+          "index": 5,
+          "content_type": "text",
+          "page": 11,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=11",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Risk Management"
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 5,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=5",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Exhibit 5: Tracking BAF\u2019s progress across key metrics"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "source_pages": [
+        13,
+        13,
+        13,
+        8,
+        11,
+        5
+      ],
+      "has_image_sources": false,
+      "num_sources": 6,
+      "latency_seconds": 4.88,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 3,
+      "query": "Are there any tables showing revenue or financial data? What do they contain?",
+      "category": "table-retrieval",
+      "target_pdf": "Annual-Report-Analysis.pdf",
+      "answer": "Yes, there is a table showing revenue and other financial data [Source 4].\n\nThe table is located on page 9 and is available as an image (image_path=/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/table-9-8.jpg) [Source 4].\n\nIt contains the following particulars for FY24 and FY25, along with the percentage change and comments:\n*   **Assets under management:** 3,817 in FY24, 4,505 in FY25, with an 18% change. The comment states that AUM growth remained healthy, highlighting widespread adoption and popularity [Source 4].\n*   **Total Revenue:** 486 in FY24, 800 in FY25, with a 65% change. The comment notes strong growth seen across segments [Source 4].\n*   **PAT (Profit After Tax):** 56 in FY24, 139 in FY25, with a 148% change [Source 4].",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 16,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=16",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Financials (Consolidated)"
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Key Financials (Consolidated)"
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 9,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=9",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Key Subsidiary Highlights"
+        },
+        {
+          "index": 4,
+          "content_type": "table",
+          "page": 9,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=9",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/table-9-8.jpg",
+          "image_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/table-9-8.jpg",
+          "snippet": "Particulars FY24 FY25 Change (%) Comments AUM growth remained healthy, highlighting the widespread adoption Assets under management 3,817 4,505 18% and popularity of this financing option among clients. Total Revenue 486 800 65% Strong growth seen across segments PAT 56 139 148%"
+        },
+        {
+          "index": 5,
+          "content_type": "image",
+          "page": 1,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=1",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/figure-1-1.jpg",
+          "image_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/figure-1-1.jpg",
+          "snippet": "[IMAGE] Extracted figure (no vision caption). File: figure-1-1.jpg page 1"
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 14,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=14",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Profitability Analysis (Rs Cr)"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "table",
+        "image",
+        "text"
+      ],
+      "source_pages": [
+        16,
+        2,
+        9,
+        9,
+        1,
+        14
+      ],
+      "has_image_sources": true,
+      "num_sources": 6,
+      "latency_seconds": 4.8,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 4,
+      "query": "What charts or figures are included in the annual report and what do they show?",
+      "category": "image-retrieval",
+      "target_pdf": "Annual-Report-Analysis.pdf",
+      "answer": "The annual report includes the following figures:\n*   An extracted figure on page 1 (image_path: `/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/figure-1-1.jpg`) [Source 2].\n*   An extracted figure on page 9 (image_path: `/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/figure-9-16.jpg`) [Source 3].\n\nThe provided context does not include a vision caption or description of what these figures show.",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Annual Report Analysis"
+        },
+        {
+          "index": 2,
+          "content_type": "image",
+          "page": 1,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=1",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/figure-1-1.jpg",
+          "image_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/figure-1-1.jpg",
+          "snippet": "[IMAGE] Extracted figure (no vision caption). File: figure-1-1.jpg page 1"
+        },
+        {
+          "index": 3,
+          "content_type": "image",
+          "page": 9,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=9",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/figure-9-16.jpg",
+          "image_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis_extracted_images/figure-9-16.jpg",
+          "snippet": "[IMAGE] Extracted figure (no vision caption). File: figure-9-16.jpg page 9"
+        },
+        {
+          "index": 4,
+          "content_type": "text",
+          "page": 3,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=3",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Key Operating Highlights"
+        },
+        {
+          "index": 5,
+          "content_type": "image",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md_extracted_images/figure-2-1.jpg",
+          "image_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md_extracted_images/figure-2-1.jpg",
+          "snippet": "[IMAGE] Extracted figure (no vision caption). File: figure-2-1.jpg page 2"
+        },
+        {
+          "index": 6,
+          "content_type": "image",
+          "page": 8,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=8",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md_extracted_images/figure-8-22.jpg",
+          "image_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md_extracted_images/figure-8-22.jpg",
+          "snippet": "[IMAGE] Extracted figure (no vision caption). File: figure-8-22.jpg page 8"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "image",
+        "image",
+        "text",
+        "image",
+        "image"
+      ],
+      "source_pages": [
+        2,
+        1,
+        9,
+        3,
+        2,
+        8
+      ],
+      "has_image_sources": true,
+      "num_sources": 6,
+      "latency_seconds": 4.43,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 5,
+      "query": "What is the company's strategy for future growth?",
+      "category": "text-retrieval",
+      "target_pdf": "Annual-Report-Analysis.pdf",
+      "answer": "The company's strategy for future growth involves several key initiatives:\n\n*   **Long-Range Strategy (LRS) Implementation:** The company aims for successful implementation of its Long-Range Strategy (LRS) to strengthen its competitive positioning [Source 3]. This strategy, specifically LRS FY25-29, includes plans to launch new products [Source 2].\n*   **Investment in New Product Lines:** The company plans to invest in new product lines to capitalize on opportunities in India and achieve sustained growth [Source 5]. This includes expanding the BAF product suite with initiatives such as leasing multi-product distribution and green financing for both solar and electric vehicles (EV) [Source 5].\n*   **Customer Share Growth:** The strategy also focuses on growing the company's share of customers' wallets by offering all products and services in a frictionless manner, aiming for the highest Customer Satisfaction (CSAT) Score and Products Per Customer (PPC) [Source 6].\n*   **Organizational Changes:** To achieve its long-term growth objectives, the Board of Directors approved senior management portfolio changes [Source 4].",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 11,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=11",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Strategy"
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 11,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=11",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "The company plans to launch new products under the LRS FY25-29 strategy. The financial strategies included are as follows:"
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 10,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=10",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Successful Long-Range Strategy (LRS) Implementation to Strengthen Competitive Positioning"
+        },
+        {
+          "index": 4,
+          "content_type": "text",
+          "page": 8,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=8",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "To prepare the company to achieve its long-term growth objectives, the Board of Directors approved senior management portfolio changes."
+        },
+        {
+          "index": 5,
+          "content_type": "text",
+          "page": 11,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=11",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Invest in new product lines to seize the India opportunity and grow in a sustained manner. The following product initiatives have been envisaged for expansion of the BAF product suite: (i) Leasing multi-product distribution, and (ii) Green financing for both solar and EV."
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 10,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=10",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Customer Share: To grow the company\u2019s share of customers\u2019 wallet by offering all products and services in a frictionless manner and deliver the highest Customer Satisfaction (CSAT) Score and Products Per Customer (PPC)."
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "source_pages": [
+        11,
+        11,
+        10,
+        8,
+        11,
+        10
+      ],
+      "has_image_sources": false,
+      "num_sources": 6,
+      "latency_seconds": 5.11,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 6,
+      "query": "What is the main topic of the eval agents document?",
+      "category": "text-retrieval",
+      "target_pdf": "Eval-agents.md.pdf",
+      "answer": "The main topic of the eval agents document is the extensive evaluation of coding agents, particularly focusing on the impact of actively used context files on their ability to solve real-world software engineering tasks [Source 2, 3, 4]. This evaluation is conducted using benchmarks such as AGENTBENCH and SWE-BENCH LITE [Source 3, 4]. The document investigates how different types of context files\u2014developer-provided, automatically generated by LLMs, or omitted\u2014affect agent performance and behavior [Source 3, 4, 6].",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "to generate AGENTBENCH instances and evaluate coding agents is available here."
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "1. AGENTBENCH, a new curated benchmark for the im- pact of actively used context files on agents\u2019 ability to solve real-world software engineering tasks."
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "2. An extensive evaluation of different coding agents and underlying models on AGENTBENCH and SWE- BENCH LITE, showing that LLM-generated context files tend to decrease agent performance, across mod- els or prompts used to generate them, while developer- written context files tend to slightly improve it."
+        },
+        {
+          "index": 4,
+          "content_type": "text",
+          "page": 4,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=4",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "In this Section, we investigate what effect context files have on the behavior of coding agents and how strong this effect is. To this end, we conduct an extensive evalua- tion of various coding agents on SWE-BENCH LITE and AGENTBENCH, considering both automatically generated and developer-provided context files."
+        },
+        {
+          "index": 5,
+          "content_type": "text",
+          "page": 3,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=3",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "In this Section, we discuss the requirements for AGENT- BENCH, a SWE-BENCH-like benchmark that targets the evaluation of developer-provided context files, its genera- tion process, and its statistics."
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Figure 1. Overview of our evaluation pipeline. We begin with real-world repositories and tasks derived from past pull requests. For each repository state, we generate three settings: 1\u20dd If a developer-provided context file exists, we include it in the repository. In 2\u20dd, we omit the context file. 3\u20dd We use the coding agent\u2019s recommended settings to generate the context file. Then we pass the repository and context file to the coding agent and instruct it to autonomously resolve the task. We final\u2026"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "source_pages": [
+        2,
+        2,
+        2,
+        4,
+        3,
+        2
+      ],
+      "has_image_sources": false,
+      "num_sources": 6,
+      "latency_seconds": 6.38,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 7,
+      "query": "How are agents evaluated in the document? What metrics or benchmarks are used?",
+      "category": "text-retrieval",
+      "target_pdf": "Eval-agents.md.pdf",
+      "answer": "Agents are evaluated using AGENTBENCH, a new curated benchmark designed for real-world software engineering tasks, which focuses on the impact of actively used context files [Source 2, Source 4]. The evaluation process involves setting up the environment, prompting the coding agent with a task description (Ii), retrieving the predicted patch (\u02c6Xi), and measuring `execRi\u25e6 \u02c6Xi (Ti)` [Source 3].\n\nThe metrics used for agent performance are:\n*   **Success rate:** The portion of instances where the agent produces a patch that leads to all tests passing [Source 1].\n*   **Number of steps:** The count of interactions the agent requires to complete a task, where each step is one interaction with the environment (e.g., calling a shell tool or modifying a file) [Source 1].\n*   **Total cost of LLM inference:** The cost required to complete a task. For QWEN3-30B-CODER, this cost is estimated from the average OpenRouter API price [Source 1].",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 5,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=5",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Metrics The main metric for agent performance is suc- cess rate (\u00a73.1), i.e., the portion of instances for which the agent produces a patch that leads to all tests passing. We additionally consider the number of steps the agent requires to complete a task. Each step is one interaction with the environment, e.g., calling a shell tool or modifying a file. Finally, we report the total cost of LLM inference required to complete a task. For QWEN3-30B-CODER, we estimate the cost from the average OpenR\u2026"
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "1. AGENTBENCH, a new curated benchmark for the im- pact of actively used context files on agents\u2019 ability to solve real-world software engineering tasks."
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 4,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=4",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Evaluation We thus obtain AGENTBENCH instances i, each consisting of a task description Ii, a codebase Ri, golden patch X\u2217 i , and a set of tests Ti. During evaluation, we first set up the environment before prompting the coding agent with the task description Ii, retrieving the predicted patch \u02c6Xi, and measuring execRi\u25e6 \u02c6Xi (Ti)."
+        },
+        {
+          "index": 4,
+          "content_type": "text",
+          "page": 3,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=3",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "In this Section, we discuss the requirements for AGENT- BENCH, a SWE-BENCH-like benchmark that targets the evaluation of developer-provided context files, its genera- tion process, and its statistics."
+        },
+        {
+          "index": 5,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "to generate AGENTBENCH instances and evaluate coding agents is available here."
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 3,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=3",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "3. AGENTBENCH"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "source_pages": [
+        5,
+        2,
+        4,
+        3,
+        2,
+        3
+      ],
+      "has_image_sources": false,
+      "num_sources": 6,
+      "latency_seconds": 6.22,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 8,
+      "query": "What are the different types of agents discussed?",
+      "category": "text-retrieval",
+      "target_pdf": "Eval-agents.md.pdf",
+      "answer": "The context discusses \"Coding agents\" [Source 1, 5]. Specifically, it mentions four coding agents: CLAUDE CODE, CODEX, and QWEN CODE [Source 6].",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 1,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=1",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Coding agents are being rapidly adopted across the soft- ware engineering industry (Sarkar, 2025), and providing context files like AGENTS.md, a README specifically target- ing agents, has become common practice. With various in-"
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 3,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=3",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "3. AGENTBENCH"
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 9,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=9",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "AGENTS.md. AGENTS.md - A simple, open format for guiding coding agents, 2025. URL https://agents.m d/."
+        },
+        {
+          "index": 4,
+          "content_type": "text",
+          "page": 1,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=1",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "dustry leaders (AGENTS.md, 2025; Anthropic, 2025b) rec- ommending this approach to adapt their agents to specific repositories, context files are now supported by most pop- ular agent frameworks, and included in over 60\u2019000 open- source repositories at the time of writing, as reported by AGENTS.md (2025)."
+        },
+        {
+          "index": 5,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Coding agents Coding agents are LLM-based systems designed for autonomous resolution of coding tasks (Yang et al., 2024). Typically, they consist of a harness that al- lows an LLM to interact with its environment using spe- cialized tools for, e.g., executing bash commands, conduct- ing web searches, or reading, creating, or modifying files (Wang et al., 2025; Yang et al., 2024)."
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 5,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=5",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Coding Agents We consider four coding agents, paired with suitable models: CLAUDE CODE (Anthropic, 2025a) with SONNET-4.5 (Anthropic, 2025), CODEX (OpenAI, 2025c) with GPT-5.2 and GPT-5.1 MINI (Singh et al., 2026), and QWEN CODE (QwenLM, 2025) with QWEN3- 30B-CODER (Team, 2025). For CLAUDE CODE, we use the default settings and set the temperature of SONNET- 4.5 to 0. Similarly, for CODEX, we also use the default settings and set the temperature of GPT-5.2 and GPT-5.1 MINI to 0. For QWEN CODE, we\u2026"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "source_pages": [
+        1,
+        3,
+        9,
+        1,
+        2,
+        5
+      ],
+      "has_image_sources": false,
+      "num_sources": 6,
+      "latency_seconds": 4.1,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 9,
+      "query": "Compare the topics covered in both documents.",
+      "category": "cross-document",
+      "target_pdf": "both",
+      "answer": "The document `Annual-Report-Analysis.pdf` covers a summary, suggesting it pertains to the analysis of an annual report [Source 1].\n\nThe document `Eval-agents.md.pdf` covers several topics related to the evaluation of agents:\n*   An introduction [Source 3] and background/related work [Source 5].\n*   An analysis of differences between context files generated by various models and the impact of prompts used to create these files [Source 2].\n*   Information regarding the increase in average tool use when including LLM-generated or developer-provided context files, compared to not using them, and the categorization of tool calls using an LLM [Source 4].\n*   It also contains a \"Diff excerpt\" [Source 6].",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Annual-Report-Analysis.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Summary"
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 7,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=7",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "In this Section we analyze differences between the context files generated by different models, and the impact of the prompt used to create the context files."
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 1,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=1",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "1. Introduction"
+        },
+        {
+          "index": 4,
+          "content_type": "text",
+          "page": 12,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=12",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Figure 10. Increase in the average tool use (grouped into high-level categories) when including LLM-generated (bright green) or developer-provided (dark green) context files, compared to the average tool use without context files. For the high-level categories, we use an LLM to categorize the various tool calls."
+        },
+        {
+          "index": 5,
+          "content_type": "text",
+          "page": 2,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=2",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "2. Background and Related Work"
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 14,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=14",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Diff excerpt"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "source_pages": [
+        2,
+        7,
+        1,
+        12,
+        2,
+        14
+      ],
+      "has_image_sources": false,
+      "num_sources": 6,
+      "latency_seconds": 5.7,
+      "status": "success",
+      "error": null
+    },
+    {
+      "id": 10,
+      "query": "What is quantum computing?",
+      "category": "out-of-scope",
+      "target_pdf": "none",
+      "answer": "The provided context does not contain information about what quantum computing is.",
+      "sources": [
+        {
+          "index": 1,
+          "content_type": "text",
+          "page": 1,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=1",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "1. Introduction"
+        },
+        {
+          "index": 2,
+          "content_type": "text",
+          "page": 3,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=3",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "3.1. Notation and Definitions"
+        },
+        {
+          "index": 3,
+          "content_type": "text",
+          "page": 1,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=1",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Abstract"
+        },
+        {
+          "index": 4,
+          "content_type": "text",
+          "page": 14,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=14",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "Title: {title}"
+        },
+        {
+          "index": 5,
+          "content_type": "text",
+          "page": 16,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=16",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "{problem_description}"
+        },
+        {
+          "index": 6,
+          "content_type": "text",
+          "page": 16,
+          "doc_link": "file:///Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf#page=16",
+          "source_file": "/Users/rahkumar/Documents/learnings/multi-model-rag/data/Eval-agents.md.pdf",
+          "image_path": null,
+          "image_link": null,
+          "snippet": "{pr_description}"
+        }
+      ],
+      "source_types_retrieved": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "source_pages": [
+        1,
+        3,
+        1,
+        14,
+        16,
+        16
+      ],
+      "has_image_sources": false,
+      "num_sources": 6,
+      "latency_seconds": 2.51,
+      "status": "success",
+      "error": null
+    }
+  ]
+}

@@ -25,10 +25,11 @@ CHAT_MODEL: str = os.getenv("CHAT_MODEL", "gemini-2.5-flash")
 # ── Paths ──────────────────────────────────────────────────────────────────────
 BASE_DIR          = Path(__file__).parent
 VECTOR_STORE_PATH = Path(os.getenv("VECTOR_STORE_PATH", str(BASE_DIR / "chroma_db")))
+DOCSTORE_PATH     = Path(os.getenv("DOCSTORE_PATH",     str(BASE_DIR / "docstore")))
 IMAGE_STORE_PATH  = Path(os.getenv("IMAGE_STORE_PATH",  str(BASE_DIR / "extracted_images")))
 DOCS_PATH         = Path(os.getenv("DOCS_PATH",         str(BASE_DIR / "docs")))
 
-for _d in [VECTOR_STORE_PATH, IMAGE_STORE_PATH, DOCS_PATH]:
+for _d in [VECTOR_STORE_PATH, DOCSTORE_PATH, IMAGE_STORE_PATH, DOCS_PATH]:
     _d.mkdir(parents=True, exist_ok=True)
 
 # ── Chunking ───────────────────────────────────────────────────────────────────

@@ -7,7 +7,7 @@ from typing import Any
 from fastapi import BackgroundTasks, FastAPI
 from pydantic import BaseModel
 
-from agent.config import CHROMA_DIR, REPORTS_DIR
+from agent.config import CHROMA_DIR
 from agent.graph import build_graph
 from agent.services.cleanup import cleanup_old_reports
 from agent.services.report_store import ReportStore
@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
     global report_store, compiled_graph
     from dotenv import load_dotenv
     load_dotenv()
-    report_store = ReportStore(chroma_dir=CHROMA_DIR, reports_dir=REPORTS_DIR)
+    report_store = ReportStore(chroma_dir=CHROMA_DIR)
     compiled_graph = build_graph(report_store)
     yield
 
@@ -87,7 +87,7 @@ async def submit_query(req: QueryRequest, background_tasks: BackgroundTasks):
             "job_id": job_id,
             "route": "old",
             "similarity_score": 1.0,
-            "matched_query": match[0],
+            "matched_query": match,
             "research_results": None,
             "rag_results": None,
             "report": None,
