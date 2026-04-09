@@ -29,7 +29,7 @@ def _download_pdf(url: str, dest_dir: Path) -> Path | None:
 def _extract_top_items(raw_results: dict, limit: int) -> dict:
     sources_by_platform: dict[str, list] = {}
     for source_name, source_data in raw_results.items():
-        items = source_data.get("items", [])
+        items = source_data.get("results", [])
         sources_by_platform[source_name] = items[:limit]
     return sources_by_platform
 
