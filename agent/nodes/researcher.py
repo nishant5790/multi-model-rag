@@ -90,10 +90,33 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
     summary = data.get("summary", {})
     sources_by_platform = _extract_top_items(raw_results, RESEARCH_LIMIT)
 
-    rag = MultiModalRAG(persist_directory=str(CHROMA_DIR))
+    report = {
+        "type": "research_result",
+        "summary": summary,
+        "sources_by_platform": sources_by_platform,
+    }
+    report_store.store_query(query, job_id, report)
+
+    text_docs = _collect_text_content(sources_by_platform)
+    if text_docs:
+        rag = MultiModalRAG(persist_directory=str(CHROMA_DIR))
+        rag._vs.add_documents(text_docs)
+
+    _ingest_pdfs_background(sources_by_platform)
+
+    return {"research_results": report, "status": "complete"}
+
+
+def _ingest_pdfs_background(sources_by_platform: dict) -> None:
+    """Download and ingest PDFs in a best-effort manner. Failures are silently skipped."""
+    import threading
 
     pdf_urls = _collect_pdf_urls(sources_by_platform)
-    if pdf_urls:
+    if not pdf_urls:
+        return
+
+    def _do_ingest():
+        rag = MultiModalRAG(persist_directory=str(CHROMA_DIR))
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
             for url in pdf_urls:
@@ -104,16 +127,4 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
                     except Exception:
                         pass
 
-    text_docs = _collect_text_content(sources_by_platform)
-    if text_docs:
-        vs = rag._vs
-        vs.add_documents(text_docs)
-
-    report = {
-        "type": "research_result",
-        "summary": summary,
-        "sources_by_platform": sources_by_platform,
-    }
-    report_store.store_query(query, job_id, report)
-
-    return {"research_results": report, "status": "complete"}
+    threading.Thread(target=_do_ingest, daemon=True).start()
