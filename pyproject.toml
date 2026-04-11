@@ -5,7 +5,7 @@ description = "Multi-modal RAG over PDFs (text, tables, images) with Gemini and 
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "chromadb>=1.5.5",
+    "chromadb>=0.6.3,<1.0.0",
     "fastapi>=0.115.0",
     "google-genai>=1.70.0",
     "httpx>=0.28.0",
