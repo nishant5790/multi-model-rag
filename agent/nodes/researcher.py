@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 from langchain_core.documents import Document
 
 from agent.config import (
-    CHROMA_DIR,
     DEEP_AGENT_MODEL,
     MCP_SERVER_URL,
     RESEARCH_LIMIT,
@@ -235,7 +234,8 @@ def _run_async(coro):
             loop.close()
 
     with ThreadPoolExecutor(max_workers=1) as pool:
-        return pool.submit(_run).result()
+        future = pool.submit(_run)
+        return future.result(timeout=300)
 
 
 def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
@@ -245,6 +245,7 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
     try:
         logger.info("Starting deep agent research for: %s", query)
         result = _run_async(_run_deep_agent(query))
+        logger.info("Deep agent finished, got %d messages", len(result.get("messages", [])))
     except Exception as e:
         logger.exception("Deep agent failed for query: %s", query)
         return {
@@ -254,6 +255,7 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
         }
 
     markdown = _extract_report(result)
+    logger.info("Report extraction: %s", f"{len(markdown)} chars" if markdown else "NONE")
     if not markdown:
         logger.error("Deep agent returned no report for: %s", query)
         return {
@@ -276,7 +278,7 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
         },
     )
     try:
-        rag = MultiModalRAG(persist_directory=str(CHROMA_DIR))
+        rag = MultiModalRAG()
         rag._vs.add_documents([doc])
     except Exception:
         pass

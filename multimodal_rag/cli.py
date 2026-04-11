@@ -14,17 +14,11 @@ from multimodal_rag import MultiModalRAG
 
 def main(argv: list[str] | None = None) -> int:
     load_dotenv()
-    p = argparse.ArgumentParser(description="Multi-modal RAG (Gemini + Chroma + unstructured PDFs)")
+    p = argparse.ArgumentParser(description="Multi-modal RAG (Gemini + Qdrant + unstructured PDFs)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     ing = sub.add_parser("ingest", help="Index a PDF into the vector store")
     ing.add_argument("pdf", type=Path, help="Path to PDF file")
-    ing.add_argument(
-        "--chroma-dir",
-        type=Path,
-        default=Path(".chroma"),
-        help="Chroma persist directory (default: .chroma)",
-    )
     ing.add_argument(
         "--images-dir",
         type=Path,
@@ -40,12 +34,6 @@ def main(argv: list[str] | None = None) -> int:
     ask = sub.add_parser("query", help="Ask a question against the indexed store")
     ask.add_argument("question", help="Natural language question")
     ask.add_argument(
-        "--chroma-dir",
-        type=Path,
-        default=Path(".chroma"),
-        help="Chroma persist directory (default: .chroma)",
-    )
-    ask.add_argument(
         "--json",
         action="store_true",
         help="Print full JSON (answer + sources with links)",
@@ -54,7 +42,7 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     if args.cmd == "ingest":
-        rag = MultiModalRAG(persist_directory=args.chroma_dir)
+        rag = MultiModalRAG()
         n = rag.ingest_pdf(
             args.pdf,
             image_output_dir=args.images_dir,
@@ -64,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.cmd == "query":
-        rag = MultiModalRAG(persist_directory=args.chroma_dir)
+        rag = MultiModalRAG()
         out = rag.query(args.question)
         if args.json:
             print(json.dumps(out, indent=2))

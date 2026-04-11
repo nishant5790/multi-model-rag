@@ -8,7 +8,7 @@ from fastapi import BackgroundTasks, FastAPI
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 
-from agent.config import CHROMA_DIR
+from agent.config import QDRANT_URL
 from agent.graph import build_graph
 from agent.services.cleanup import cleanup_old_reports
 from agent.services.report_store import ReportStore
@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     global report_store, compiled_graph
     from dotenv import load_dotenv
     load_dotenv()
-    report_store = ReportStore(chroma_dir=CHROMA_DIR)
+    report_store = ReportStore()
     compiled_graph = build_graph(report_store)
     yield
 

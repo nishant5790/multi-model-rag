@@ -75,19 +75,19 @@ RAG_PROMPT = ChatPromptTemplate.from_messages(
 
 
 class MultiModalRAG:
-    """Ingest PDFs into Chroma and run retrieval + Gemini chat."""
+    """Ingest PDFs into Qdrant and run retrieval + Gemini chat."""
 
     def __init__(
         self,
-        persist_directory: Path | str,
         *,
         collection_name: str = "multimodal_rag",
         retrieve_k: int = 6,
         graph_expand_k: int = 8,
         max_graph_hops: int = 1,
         use_graph_expand: bool = True,
+        persist_directory: Path | str | None = None,
     ) -> None:
-        self._persist_directory = Path(persist_directory).expanduser().resolve()
+        self._persist_directory = Path(persist_directory or ".").expanduser().resolve()
         self._graph_path = graph_json_path(self._persist_directory)
         self._retrieve_k = retrieve_k
         self._graph_expand_k = graph_expand_k
@@ -96,7 +96,6 @@ class MultiModalRAG:
         self._embeddings = get_embeddings()
         self._chat = get_chat()
         self._vs = get_vectorstore(
-            self._persist_directory,
             collection_name=collection_name,
             embeddings=self._embeddings,
         )
