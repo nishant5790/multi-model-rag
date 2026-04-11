@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import BackgroundTasks, FastAPI
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 
 from agent.config import CHROMA_DIR
@@ -39,6 +40,7 @@ class QueryResponse(BaseModel):
     job_id: str
     status: str
     result: dict | None = None
+    error: str | None = None
 
 
 def _run_graph_sync(job_id: str, query: str) -> None:
@@ -115,6 +117,42 @@ async def get_status(job_id: str):
         job_id=job_id,
         status=job["status"],
         result=job.get("result"),
+        error=job.get("error"),
+    )
+
+
+@app.get("/report/{job_id}")
+async def get_report(job_id: str):
+    """Return the markdown report for a completed job."""
+    if job_id not in jobs:
+        return {"status": "not_found", "markdown": None}
+    job = jobs[job_id]
+    if job["status"] != "complete":
+        return {"status": job["status"], "markdown": None}
+    result = job.get("result") or {}
+    markdown = result.get("markdown", "")
+    return {
+        "status": "complete",
+        "markdown": markdown,
+        "sources_used": result.get("sources_used", []),
+        "generated_at": result.get("generated_at", ""),
+    }
+
+
+@app.get("/report/{job_id}/download")
+async def download_report(job_id: str):
+    """Download the report as a .md file."""
+    if job_id not in jobs:
+        return PlainTextResponse("Job not found", status_code=404)
+    job = jobs[job_id]
+    if job["status"] != "complete":
+        return PlainTextResponse(f"Job status: {job['status']}", status_code=202)
+    result = job.get("result") or {}
+    markdown = result.get("markdown", "No report content")
+    return PlainTextResponse(
+        content=markdown,
+        media_type="text/markdown",
+        headers={"Content-Disposition": f'attachment; filename="report-{job_id[:8]}.md"'},
     )
 
 

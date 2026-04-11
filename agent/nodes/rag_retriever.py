@@ -9,7 +9,7 @@ def rag_retriever(state: AgentState) -> dict:
     query = state["query"]
     try:
         rag = MultiModalRAG(persist_directory=str(CHROMA_DIR))
-        result = rag.query(query)
+        result = rag.retrieve_docs(query)
         return {"rag_results": result, "status": "complete"}
     except Exception as e:
         return {"rag_results": None, "status": "error", "error": str(e)}

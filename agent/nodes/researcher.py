@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import asyncio
+import logging
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
+
+logger = logging.getLogger(__name__)
 
 from langchain_core.documents import Document
 
@@ -16,54 +20,128 @@ from agent.services.report_store import ReportStore
 from multimodal_rag import MultiModalRAG
 
 KNOWN_PLATFORMS = [
-    "hacker_news", "youtube", "github", "linkedin",
-    "reddit", "rss", "google_news", "podcasts",
+    "hackernews", "youtube", "github", "linkedin",
+    "reddit", "rss", "google_news", "podcasts", "arxiv",
 ]
 
-SYSTEM_PROMPT = f"""\
-You are a LinkedIn content strategist and trend scout. Given a topic,
-use the available MCP tools to find what's trending RIGHT NOW across
-multiple platforms, then produce a research report designed to help
-create high-engagement LinkedIn posts in minimal time.
-
-Steps:
-1. Search at least 3-5 source tools to find the freshest, most-discussed
-   angles on this topic. Pass limit={RESEARCH_LIMIT} to each tool.
-2. Focus on: what's getting engagement, what's controversial, what data
-   points are surprising, what stories are emerging.
-3. Write a structured report in EXACTLY this format:
-
-# Trend Report: {{topic}}
-
-## Top 5 Hooks
-Ready-to-use LinkedIn opening lines ranked by engagement potential.
-Each hook should stop the scroll -- use numbers, contrarian takes,
-or surprising data points.
-
-## Trending Angles
-What specific angles are getting the most engagement right now?
-For each angle:
-- The angle in one sentence
-- Why it's trending (data/evidence from sources)
-- Engagement signals (upvotes, comments, views, stars)
-- Suggested LinkedIn post format (carousel, text, poll, story)
-
-## Key Data Points & Stats
-Quotable numbers, metrics, and facts you can drop into posts.
-Include the source URL for credibility.
-
-## Platform Pulse
-### (platform name)
-What each community is saying -- the conversation, sentiment,
-and unique angles per platform. Only include platforms with relevant results.
-
-## Raw Source Links
-Bullet list of the top URLs with one-line descriptions.
-
----
-Generated: {{date}}
-Sources queried: {{list of platforms used}}
-"""
+SYSTEM_PROMPT = f"""\                                                                                                                                                                                                                                 
+  You are a LinkedIn content strategist and trend intelligence analyst. \
+  Given a topic, use the available MCP tools to find what's trending \
+  RIGHT NOW across multiple platforms, then produce a comprehensive \                                                                                                                                                                                   
+  research report designed to help create high-engagement LinkedIn \                                                                                                                                                                                    
+  posts in minimal time.                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                        
+  IMPORTANT RULES:                                                                                                                                                                                                                                      
+  - Do NOT use write_todos. Do NOT plan. Just execute immediately.
+  - Do NOT use file tools (read_file, write_file, edit_file, ls, glob, grep).                                                                                                                                                                           
+  - Do NOT use the execute tool or the task tool.
+  - ONLY use the MCP trend-finding tools (find_hackernews_trends, \                                                                                                                                                                                     
+  find_youtube_trends, find_github_trends, find_reddit_trends, \                                                                                                                                                                                        
+  find_rss_trends, find_google_news_trends, find_podcast_trends, \
+  find_arxiv_trends, find_linkedin_trends, etc.).                                                                                                                                                                                                       
+  - Call ALL available source tools, then write the full report in your \
+  final message.                                                                                                                                                                                                                                        
+   
+  EXECUTION:                                                                                                                                                                                                                                            
+  1. Call ALL available source tools in parallel with topic and \
+  limit={RESEARCH_LIMIT}.                                                                                                                                                                                                                               
+  2. Once all results are back, analyze and write the complete report \
+  in your FINAL message. Do NOT call any more tools after analysis begins.                                                                                                                                                                              
+                                                                                                                                                                                                                                                        
+  ANALYSIS RULES (apply before writing):
+  - DEDUPLICATE: The same story often trends across Reddit, HN, Google \                                                                                                                                                                                
+  News simultaneously (e.g., a viral news story). Report it ONCE but \
+  cite ALL platforms where it appeared. Cross-platform presence = \                                                                                                                                                                                     
+  stronger signal.
+  - SIGNAL vs NOISE: Distinguish genuine industry trends from viral \                                                                                                                                                                                   
+  outrage, jokes, or clickbait. A practitioner discussion on Reddit \
+  with 300 comments is higher signal than a reposted news headline. \                                                                                                                                                                                   
+  GitHub repos with high stars/day are stronger than old repos with \                                                                                                                                                                                   
+  accumulated stars.                                                                                                                                                                                                                                    
+  - REAL NUMBERS ONLY: Only cite metrics that exist in the tool results \                                                                                                                                                                               
+  (upvotes, views, stars, stars_per_day, comments, like_ratio). Never \                                                                                                                                                                                 
+  fabricate or estimate engagement numbers.                                                                                                                                                                                                             
+  - NON-ENGLISH CONTENT: Note its existence in a footnote but do not \                                                                                                                                                                                  
+  feature in main analysis unless it signals a geographic trend.                                                                                                                                                                                        
+  - PRACTITIONER SIGNAL > MEDIA SIGNAL: GitHub activity + Reddit/HN \                                                                                                                                                                                   
+  discussion = builders care about this. News articles alone = media \                                                                                                                                                                                  
+  narrative, may not resonate with LinkedIn technical audience.                                                                                                                                                                                         
+  - RECENCY: Prioritize items from the last 48-72 hours over older content.
+                                                                                                                                                                                                                                                        
+  FORMAT YOUR FINAL MESSAGE AS:                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                        
+  # Trend Report: {{topic}}                                                                                                                                                                                                                             
+  **Date**: {{date}} | **Sources**: {{count}} platforms analyzed
+                                                                                                                                                                                                                                                        
+  ---
+                                                                                                                                                                                                                                                        
+  ## Executive Summary                                                                                                                                                                                                                                  
+  3-4 sentences: dominant narrative this week, overall sentiment \
+  (bullish/cautious/divided), and one surprising finding from the data.                                                                                                                                                                                 
+                                                                                                                                                                                                                                                        
+  ## Cross-Platform Trending Themes                                                                                                                                                                                                                     
+  Rank by signal strength. For EACH theme:                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                        
+  ### [Theme Name]
+  - **Signal**: 🔴 Strong (3+ sources) | 🟡 Emerging (2 sources) | 🟢 Early (1 source)                                                                                                                                                                  
+  - **What**: One sentence                                                                                                                                                                                                                              
+  - **Why now**: What triggered this in the last 7 days
+  - **Evidence**: Specific items with real metrics \                                                                                                                                                                                                    
+  (e.g., "Reddit r/cscareerquestions: 1,019 upvotes, 303 comments")                                                                                                                                                                                     
+  - **Trajectory**: Rising / Peaking / Fading                                                                                                                                                                                                           
+  - **LinkedIn angle**: One-line post idea + suggested format                                                                                                                                                                                           
+                                                                                                                                                                                                                                                        
+  ## Top 10 LinkedIn Hooks                                                                                                                                                                                                                              
+  Ready-to-use scroll-stopping opening lines. For each:                                                                                                                                                                                                 
+  1. **Hook**: The opening line                                                                                                                                                                                                                         
+     - **Target**: Who engages (engineers / founders / hiring managers / etc.)                                                                                                                                                                          
+     - **Format**: Text post / Carousel / Poll / Story                                                                                                                                                                                                  
+     - **Backed by**: The data point or source that supports it                                                                                                                                                                                         
+                                                                                                                                                                                                                                                        
+  ## Engagement Leaderboard                                                                                                                                                                                                                             
+  Top 15 items across ALL sources ranked by engagement. Table format:                                                                                                                                                                                   
+  | # | Title | Platform | Key Metric | URL |                                                                                                                                                                                                           
+                                                                                                                                                                                                                                                        
+  ## Platform Pulse                                                                                                                                                                                                                                     
+  Only include platforms that returned relevant results. For each:                                                                                                                                                                                      
+  ### [Platform Name]                                                                                                                                                                                                                                   
+  - **Top signal**: Single most important item + why
+  - **Sentiment**: Excited / Skeptical / Debating / Mixed                                                                                                                                                                                               
+  - **Unique angle**: Something only visible from this platform                                                                                                                                                                                         
+                                                                                                                                                                                                                                                        
+  ## Contrarian & Gap Analysis                                                                                                                                                                                                                          
+  - **Overhyped**: High volume, low substance — content to AVOID                                                                                                                                                                                        
+  - **Underrated**: Low volume, high signal — content OPPORTUNITY                                                                                                                                                                                       
+  - **Gap**: What's missing from the conversation that should be there                                                                                                                                                                                  
+  - **Emerging**: What could go mainstream in 2-4 weeks                                                                                                                                                                                                 
+                                                                                                                                                                                                                                                        
+  ## Quotable Stats                                                                                                                                                                                                                                     
+  Bullet list of concrete numbers for posts. Each with:                                                                                                                                                                                                 
+  - The stat + context (why it matters)                                                                                                                                                                                                                 
+  - Source URL for credibility                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                        
+  ## This Week's Content Playbook                                                                                                                                                                                                                       
+  ### Must-Post (multi-source signal, high conviction)
+  1. [Hook] — [Format] — [Why now + data point]                                                                                                                                                                                                         
+  2. [Hook] — [Format] — [Why now + data point]                                                                                                                                                                                                         
+  3. [Hook] — [Format] — [Why now + data point]                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                        
+  ### Worth Testing (emerging signal)                                                                                                                                                                                                                   
+  1. [Hook] — [Format] — [Why now]                                                                                                                                                                                                                      
+  2. [Hook] — [Format] — [Why now]                                                                                                                                                                                                                      
+                  
+  ### Monitor for Next Week                                                                                                                                                                                                                             
+  - [Topic to watch]
+  - [Topic to watch]
+                                                                                                                                                                                                                                                        
+  ## Raw Source Links                                                                                                                                                                                                                                   
+  Grouped by platform. Top items only. Format:                                                                                                                                                                                                          
+  - [Title](URL) — one-line description (key metric)                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                        
+  ---                                                                                                                                                                                                                                                   
+  Generated: {{date}}                                                                                                                                                                                                                                   
+  Sources queried: {{list of platforms used}}
+  """
 
 
 def _detect_sources(report_text: str) -> list[str]:
@@ -75,44 +153,89 @@ def _detect_sources(report_text: str) -> list[str]:
 def _extract_report(result: dict) -> str | None:
     """Walk agent messages in reverse and find the research report."""
     messages = result.get("messages", [])
-    best: str | None = None
-    best_len = 0
+    skip_keywords = ["write_todos", "Updated todo", "todo list to"]
+
+    def _get_text(msg) -> str | None:
+        content = getattr(msg, "content", None)
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts = []
+            for block in content:
+                if isinstance(block, dict) and block.get("type") == "text":
+                    parts.append(block["text"])
+                elif isinstance(block, str):
+                    parts.append(block)
+            return "\n".join(parts) if parts else None
+        return None
+
+    def _is_ai(msg) -> bool:
+        return getattr(msg, "type", "") == "ai"
+
+    logger.info("Agent returned %d messages", len(messages))
 
     for msg in reversed(messages):
-        content = msg.content if hasattr(msg, "content") else str(msg)
-        if not isinstance(content, str):
+        if not _is_ai(msg):
             continue
-        if "# Trend Report:" in content:
-            return content
-        if len(content) > best_len:
-            best = content
-            best_len = len(content)
+        text = _get_text(msg)
+        if not text or len(text) < 200:
+            continue
+        if any(kw in text for kw in skip_keywords):
+            continue
+        return text
 
-    return best
+    return None
 
 
 async def _run_deep_agent(query: str) -> dict:
     from langchain_mcp_adapters.client import MultiServerMCPClient
     from deepagents import create_deep_agent
 
-    async with MultiServerMCPClient(
+    client = MultiServerMCPClient(
         {
             "trends": {
                 "url": MCP_SERVER_URL,
                 "transport": "streamable_http",
             }
         }
-    ) as mcp_client:
-        tools = mcp_client.get_tools()
-        agent = create_deep_agent(
-            model=DEEP_AGENT_MODEL,
-            tools=tools,
-            system_prompt=SYSTEM_PROMPT,
+    )
+    try:
+        tools = await client.get_tools()
+    except Exception:
+        logger.warning("streamable_http failed, falling back to sse transport")
+        client = MultiServerMCPClient(
+            {
+                "trends": {
+                    "url": MCP_SERVER_URL,
+                    "transport": "sse",
+                }
+            }
         )
-        result = await agent.ainvoke(
-            {"messages": [{"role": "user", "content": query}]}
-        )
+        tools = await client.get_tools()
+
+    logger.info("Loaded %d MCP tools", len(tools))
+    agent = create_deep_agent(
+        model=DEEP_AGENT_MODEL,
+        tools=tools,
+        system_prompt=SYSTEM_PROMPT,
+    )
+    result = await agent.ainvoke(
+        {"messages": [{"role": "user", "content": query}]}
+    )
     return result
+
+
+def _run_async(coro):
+    """Run an async coroutine from sync code, even inside an existing event loop."""
+    def _run():
+        loop = asyncio.new_event_loop()
+        try:
+            return loop.run_until_complete(coro)
+        finally:
+            loop.close()
+
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        return pool.submit(_run).result()
 
 
 def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
@@ -120,8 +243,10 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
     job_id = state["job_id"]
 
     try:
-        result = asyncio.run(_run_deep_agent(query))
+        logger.info("Starting deep agent research for: %s", query)
+        result = _run_async(_run_deep_agent(query))
     except Exception as e:
+        logger.exception("Deep agent failed for query: %s", query)
         return {
             "research_results": None,
             "status": "error",
@@ -130,6 +255,7 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
 
     markdown = _extract_report(result)
     if not markdown:
+        logger.error("Deep agent returned no report for: %s", query)
         return {
             "research_results": None,
             "status": "error",
@@ -149,10 +275,18 @@ def researcher(state: AgentState, *, report_store: ReportStore) -> dict:
             "created_at": now,
         },
     )
-    rag = MultiModalRAG(persist_directory=str(CHROMA_DIR))
-    rag._vs.add_documents([doc])
+    try:
+        rag = MultiModalRAG(persist_directory=str(CHROMA_DIR))
+        rag._vs.add_documents([doc])
+    except Exception:
+        pass
 
     report_store.store_query(query, job_id)
+
+    logger.info(
+        "Research complete for '%s': %d chars, sources=%s",
+        query, len(markdown), sources_used,
+    )
 
     return {
         "research_results": {

@@ -15,3 +15,5 @@ uv.lock
 .chroma/
 *_extracted_images/
 extracted_data/
+
+docs/*

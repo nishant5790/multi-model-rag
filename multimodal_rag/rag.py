@@ -185,3 +185,41 @@ class MultiModalRAG:
                 }
             )
         return {"answer": answer, "sources": sources}
+
+    def retrieve_docs(self, question: str) -> dict[str, Any]:
+        """Retrieve documents from Chroma without running the LLM. Returns raw content and metadata."""
+        self._chunk_graph = ChunkGraph.load(self._graph_path)
+        retrieved: list[Document] = self._retriever.invoke(question)
+        final_docs = list(retrieved)
+
+        if self._use_graph_expand and self._graph_expand_k > 0:
+            seed_ids = [
+                str(m["chunk_id"])
+                for m in (d.metadata for d in retrieved)
+                if m.get("chunk_id")
+            ]
+            if seed_ids:
+                extra_ids = expand_chunk_ids(
+                    seed_ids,
+                    self._chunk_graph,
+                    max_hops=self._max_graph_hops,
+                    expand_k=self._graph_expand_k,
+                )
+                have = {str(d.metadata.get("chunk_id")) for d in retrieved if d.metadata.get("chunk_id")}
+                extra_ids = [eid for eid in extra_ids if eid not in have]
+                expanded_raw = _documents_from_chroma_get(self._vs, extra_ids)
+                by_id: dict[str, Document] = {}
+                for d in expanded_raw:
+                    cid = d.metadata.get("chunk_id")
+                    if cid:
+                        by_id[str(cid)] = d
+                expanded = [by_id[eid] for eid in extra_ids if eid in by_id]
+                final_docs = retrieved + expanded
+
+        documents = []
+        for doc in final_docs:
+            documents.append({
+                "content": doc.page_content,
+                "metadata": dict(doc.metadata),
+            })
+        return {"documents": documents, "count": len(documents)}

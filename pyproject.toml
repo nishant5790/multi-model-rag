@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "chromadb>=0.6.3,<1.0.0",
+    "deepagents>=0.0.36",
     "fastapi>=0.115.0",
     "google-genai>=1.70.0",
     "httpx>=0.28.0",
@@ -14,6 +15,7 @@ dependencies = [
     "langchain-community>=0.4.1",
     "langchain-core>=1.2.23",
     "langchain-google-genai>=4.2.1",
+    "langchain-mcp-adapters>=0.1.0",
     "langchain-openai>=1.1.12",
     "langchain-text-splitters>=1.1.1",
     "langgraph>=0.4.0",
